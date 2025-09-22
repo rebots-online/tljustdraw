@@ -27,6 +27,11 @@ const CanvasShell = ({ onAppReady, onSnapshot }: CanvasShellProps): JSX.Element 
       if (api) {
         apiRef.current = api;
         logger.info('Excalidraw API ready');
+        if (typeof window !== 'undefined') {
+          window.requestAnimationFrame(() => {
+            apiRef.current?.refresh();
+          });
+        }
         onAppReady?.(api);
       } else if (apiRef.current) {
         logger.info('Excalidraw API disconnected');

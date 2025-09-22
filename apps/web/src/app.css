@@ -94,12 +94,17 @@ main {
   display: flex;
   width: 100%;
   overflow: hidden;
+  min-height: 0;
+  min-width: 0;
 }
 
 .workspace-canvas {
   position: relative;
   flex: 1 1 auto;
+  display: flex;
   overflow: hidden;
+  min-height: 0;
+  min-width: 0;
 }
 
 .canvas-shell {
@@ -107,10 +112,17 @@ main {
   inset: 0;
   border-radius: 0;
   overflow: hidden;
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 
 .canvas-shell .tl-container {
   background: transparent;
+}
+
+.canvas-shell > .excalidraw {
+  flex: 1 1 auto;
 }
 
 .floating-panel-layer {
