@@ -1,17 +1,17 @@
 Regarding the PRD for this project, Branstormer (which is a fork of Barnstormer), @PRD_Barnstormer.md 
 
-# PROMPT: tl;justdraw! — Visual Brainstormer with tldraw, Excalidraw Import, Always-On LLM Agents, PWA/Tauri, SSO + RevenueCat
+# PROMPT: tl;justdraw! — Visual Brainstormer with Excalidraw, Always-On LLM Agents, PWA/Tauri, SSO + RevenueCat
 Licence is Copyright (C)2025 Robin L. M. Cheung, MBA. All rights reserved.
 
 ## Summary
 
-tl;draw is a **“batteries included” brainstormer**: an installable web app / PWA / Tauri desktop & mobile client. It combines **tldraw canvas** for real-time collaboration, **Excalidraw libraries** (imports and translates excalidraw components, shapes, libraries, and drawings, but remains architecturally 'tldraw'-based)  for shape richness, and **LLM agents** that are **always available** for participation in brainstorming as well as turning your ideas into visual representations with the imported and converted-to-native-tldraw MIT-licenced excalidraw libraries of components, and imported excalidraw drawings (which it converts to native tl draw format), and remains collaborative and interoperable with standard tl-draw sessions. 
+tl;draw is a **“batteries included” brainstormer**: an installable web app / PWA / Tauri desktop & mobile client. It combines an **Excalidraw canvas** for real-time collaboration, **Excalidraw libraries** (imports and normalizes Excalidraw components, shapes, libraries, and drawings) for shape richness, and **LLM agents** that are **always available** for participation in brainstorming as well as turning your ideas into visual representations with MIT-licensed Excalidraw libraries and imported Excalidraw drawings, while remaining collaborative and interoperable with standard Excalidraw sessions.
 
 Logo can be found at @tldr-logo.png 
 
 From first launch, users can brainstorm visually and agents will actively participate, making the app immediately useful without configuration.
 
-The purpose of the platform is to allow collaborative brainstorming with the inclusion of user-specified LLM assistants, who join as a user and are able to agentically translate the brainstorm, as a full participant, into visual representations on the canvas, inclusive of use of components from libraries either provided by our platform, comprising MIT-licenced excalidraw components, translated to the tldraw format as necessary, or added by the user.
+The purpose of the platform is to allow collaborative brainstorming with the inclusion of user-specified LLM assistants, who join as a user and are able to agentically translate the brainstorm, as a full participant, into visual representations on the canvas, inclusive of components from libraries either provided by our platform (MIT-licensed Excalidraw components) or added by the user.
 
 The CI/CD system is to trigger automatic build pipelines on commit that cross-compiles for .exe/.msi windows, .appimage/.deb linux, dmg macos, apk incorporating an epoch-based four-digit build number (1-min per digit) incorporated by the build system into a version-build numbering system into the filename proper, the Help|About in the GUI, and on windowed interfaces, at the bottom right corner area.
 
@@ -21,12 +21,12 @@ The CI/CD system is to trigger automatic build pipelines on commit that cross-co
 
 ## Core Requirements
 
-### 1. Canvas Foundation (tldraw)
+### 1. Canvas Foundation (Excalidraw)
 
-* Integrate **tldraw** React component as primary canvas.
+* Integrate **Excalidraw** React component as primary canvas.
 * Enable multiplayer CRDT/WebRTC sync.
 * Core primitives: shapes, sticky notes, text, arrows, images.
-* Export/import: .tldr.json  native; .excalidraw.json  via converter.
+* Export/import: `.excalidraw` native scenes and libraries.
 
 ### 2. Excalidraw Library Support
 
@@ -84,7 +84,7 @@ The CI/CD system is to trigger automatic build pipelines on commit that cross-co
 
 ## Architecture
 
-* **Frontend**: Vite + React + TS; tldraw canvas; panels (Agents, Libraries, Billing, Account).
+* **Frontend**: Vite + React + TS; Excalidraw canvas; panels (Agents, Libraries, Billing, Account).
 * **Adapters**: LLM provider registry; Excalidraw importer; RevenueCat wrapper; AuthService.
 * **Storage**: IndexedDB (offline); optional Pro/Team cloud sync.
 * **Backend (minimal)**: RevenueCat webhook listener + optional entitlement sync.
@@ -94,7 +94,7 @@ The CI/CD system is to trigger automatic build pipelines on commit that cross-co
 ## Success Criteria (MVP)
 
 ✅ Launch Barnstormer in browser, install as PWA.
-✅ Draw & collaborate on tldraw canvas.
+✅ Draw & collaborate on Excalidraw canvas.
 ✅ Import Excalidraw library (URL + upload).
 ✅ LLM agent is active by default on every board.
 ✅ Sign in with Google or GitHub.
@@ -116,7 +116,7 @@ The CI/CD system is to trigger automatic build pipelines on commit that cross-co
 
 Scaffold a **Vite + React + TypeScript** app:
 
-* Integrate tldraw.
+* Integrate Excalidraw.
 * Implement Excalidraw importer + starter pack.
 * Abstract LLM client with Gemini + OpenAI + Ollama providers.
 * Configure **one always-on agent** by default (Facilitator role).

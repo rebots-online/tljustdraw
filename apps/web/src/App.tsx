@@ -1,5 +1,5 @@
+import { serializeAsJSON } from '@excalidraw/excalidraw';
 import { createLogger } from '@shared-utils';
-import { TLStoreSnapshot, TldrawApp } from '@tldraw/tldraw';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import CanvasShell from './components/canvas/CanvasShell';
@@ -14,17 +14,18 @@ import { useAgentSession } from './hooks/useAgentSession';
 import { AGENT_PROFILES } from './state/agents';
 import { LIBRARIES, toggleLibrary } from './state/libraries';
 import { LibraryEntry } from './types/panels';
+import type { CanvasAPI, ExcalidrawElement, ExcalidrawSnapshot } from './types/canvas';
 
 const logger = createLogger({ name: '@tljustdraw/web/app' });
 
 const AppContent = (): JSX.Element => {
   const [libraries, setLibraries] = useState<LibraryEntry[]>(LIBRARIES);
   const [activeAgentId, setActiveAgentId] = useState<string>(AGENT_PROFILES[0]?.id ?? '');
-  const [tldrawApp, setTldrawApp] = useState<TldrawApp | null>(null);
-  const [latestSnapshot, setLatestSnapshot] = useState<TLStoreSnapshot>();
+  const [canvasApi, setCanvasApi] = useState<CanvasAPI | null>(null);
+  const [latestSnapshot, setLatestSnapshot] = useState<ExcalidrawSnapshot>();
 
   const agentSession = useAgentSession(activeAgentId);
-  useAgentCollaborator({ session: agentSession, app: tldrawApp, latestSnapshot });
+  useAgentCollaborator({ session: agentSession, app: canvasApi, latestSnapshot });
 
   const initialLibraryCount = LIBRARIES.length;
   const totalAgentCount = AGENT_PROFILES.length;
@@ -77,64 +78,75 @@ const AppContent = (): JSX.Element => {
     window.alert('Invite collaborators by sharing this link or enabling live sync.');
   }, []);
 
-  const handleExportTldraw = useCallback(() => {
-    if (!tldrawApp) {
-      logger.warn('Cannot export TLDraw snapshot without app instance');
+  const handleExportExcalidraw = useCallback(() => {
+    if (!canvasApi) {
+      logger.warn('Cannot export Excalidraw snapshot without API instance');
       return;
     }
-    const snapshot = JSON.stringify(tldrawApp.store.serialize(), null, 2);
-    const blob = new Blob([snapshot], { type: 'application/json' });
+    const elements = canvasApi.getSceneElements();
+    const appState = canvasApi.getAppState();
+    const files = canvasApi.getFiles();
+    const payload = serializeAsJSON(elements, appState, files, 'local');
+    const blob = new Blob([payload], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = `barnstormer-workspace-${Date.now()}.tldraw.json`;
+    anchor.download = `barnstormer-workspace-${Date.now()}.excalidraw`;
     anchor.click();
     URL.revokeObjectURL(url);
-    logger.info('Workspace exported to TLDraw JSON');
-  }, [tldrawApp]);
+    logger.info('Workspace exported to Excalidraw JSON', {
+      elementCount: elements.length,
+      fileCount: Object.keys(files).length,
+    });
+  }, [canvasApi]);
 
   const handleImportExcalidraw = useCallback(
     async (file: File) => {
-      if (!tldrawApp) {
-        logger.warn('Cannot import without TLDraw app');
+      if (!canvasApi) {
+        logger.warn('Cannot import without Excalidraw API instance');
         return;
       }
-      const text = await file.text();
-      const payload = JSON.parse(text) as { elements?: Array<{ text?: string }> };
-      const elements = payload.elements ?? [];
-      if (elements.length === 0) {
-        window.alert('No elements detected in Excalidraw file.');
-        return;
-      }
-      const notes = elements
-        .map((element) => element.text?.trim())
-        .filter((value): value is string => Boolean(value));
-      if (notes.length === 0) {
-        window.alert(
-          'Only non-text Excalidraw elements were found. Import currently supports text elements.'
-        );
-        return;
-      }
-      const origin = tldrawApp.getCamera();
-      notes.forEach((note, index) => {
-        const shapeId = tldrawApp.createShapeId();
-        type ShapeInput = Parameters<TldrawApp['createShapes']>[0][number];
-        const stickyShape: ShapeInput = {
-          id: shapeId,
-          type: 'sticky',
-          x: origin.x + 64 * index,
-          y: origin.y + 64 * index,
-          props: {
-            text: note,
-            color: 'yellow',
-            size: 'm',
-          },
+      try {
+        const text = await file.text();
+        const payload = JSON.parse(text) as {
+          type?: string;
+          elements?: ExcalidrawElement[];
+          appState?: Partial<ExcalidrawSnapshot['appState']> | null;
+          files?: ExcalidrawSnapshot['files'];
         };
-        tldrawApp.createShapes([stickyShape]);
-      });
-      logger.info('Imported Excalidraw text elements into TLDraw', { count: notes.length });
+        if (payload.type && payload.type !== 'excalidraw') {
+          window.alert('Unsupported file format. Please select a .excalidraw export.');
+          return;
+        }
+        const elements = Array.isArray(payload.elements) ? payload.elements : [];
+        const files = payload.files ?? {};
+        if (Object.keys(files).length > 0) {
+          canvasApi.addFiles(Object.values(files));
+        }
+        canvasApi.updateScene({
+          elements,
+          appState: payload.appState ?? undefined,
+        });
+        const textElements = elements.flatMap((element) => {
+          if (element.type === 'text' && 'text' in element && typeof element.text === 'string') {
+            const trimmed = element.text.trim();
+            return trimmed ? [trimmed] : [];
+          }
+          return [];
+        });
+        if (textElements.length > 0) {
+          logger.info('Imported Excalidraw text elements', { count: textElements.length });
+        }
+        logger.info('Imported Excalidraw scene', {
+          elementCount: elements.length,
+          fileCount: Object.keys(files).length,
+        });
+      } catch (error) {
+        logger.error('Failed to import Excalidraw file', { error });
+        window.alert('Import failed. Please confirm the file is a valid .excalidraw export.');
+      }
     },
-    [tldrawApp]
+    [canvasApi]
   );
 
   const floatingPanels = useMemo(
@@ -166,7 +178,7 @@ const AppContent = (): JSX.Element => {
     <WorkspaceLayout
       canvasSlot={
         <CanvasShell
-          onAppReady={(appInstance) => setTldrawApp(appInstance)}
+          onAppReady={(apiInstance) => setCanvasApi(apiInstance)}
           onSnapshot={(snapshot) => setLatestSnapshot(snapshot)}
         />
       }
@@ -186,7 +198,7 @@ const AppContent = (): JSX.Element => {
       onSelectAgent={handleSelectAgent}
       onShare={handleShareLink}
       onInvite={handleInvite}
-      onExportTldraw={handleExportTldraw}
+      onExportExcalidraw={handleExportExcalidraw}
       onImportExcalidraw={handleImportExcalidraw}
     />
   );

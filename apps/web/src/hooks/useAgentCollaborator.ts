@@ -1,16 +1,16 @@
 import { createLogger } from '@shared-utils';
-import { TLStoreSnapshot, TldrawApp } from '@tldraw/tldraw';
 import { useEffect, useRef } from 'react';
 
 import { useModelContext } from '../context/ModelProvider';
 import { AgentSession } from '../types/panels';
+import type { CanvasAPI, ExcalidrawSnapshot } from '../types/canvas';
 
 const logger = createLogger({ name: '@tljustdraw/web/useAgentCollaborator' });
 
 interface AgentCollaboratorOptions {
   session: AgentSession;
-  app: TldrawApp | null;
-  latestSnapshot?: TLStoreSnapshot;
+  app: CanvasAPI | null;
+  latestSnapshot?: ExcalidrawSnapshot;
 }
 
 export const useAgentCollaborator = ({
@@ -19,20 +19,20 @@ export const useAgentCollaborator = ({
   latestSnapshot,
 }: AgentCollaboratorOptions): void => {
   const { activeModelId } = useModelContext();
-  const snapshotRef = useRef<TLStoreSnapshot>();
+  const snapshotRef = useRef<ExcalidrawSnapshot>();
   snapshotRef.current = latestSnapshot ?? snapshotRef.current;
 
   useEffect(() => {
     if (!app) {
       return;
     }
-    logger.info('Agent collaborator connected to TLDraw', {
+    logger.info('Agent collaborator connected to Excalidraw', {
       model: activeModelId,
       transcriptLength: session.transcript.length,
     });
 
     return () => {
-      logger.info('Agent collaborator disconnected from TLDraw');
+      logger.info('Agent collaborator disconnected from Excalidraw');
     };
   }, [activeModelId, app, session.transcript.length]);
 
