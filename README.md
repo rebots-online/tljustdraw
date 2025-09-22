@@ -1,6 +1,6 @@
 # tl;justdraw! — Visual Brainstormer
 
-This monorepo hosts the tl;justdraw! platform, combining a tldraw-powered collaborative canvas, Excalidraw library ingestion, always-on LLM facilitation, SSO authentication, RevenueCat billing, and deployable clients for web (PWA) and desktop/mobile (Tauri).
+This monorepo hosts the tl;justdraw! platform, combining an Excalidraw-powered collaborative canvas, Excalidraw library ingestion, always-on LLM facilitation, SSO authentication, RevenueCat billing, and deployable clients for web (PWA) and desktop/mobile (Tauri).
 
 ## Repository Layout
 

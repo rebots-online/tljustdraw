@@ -5,7 +5,7 @@ interface ShareMenuProps {
   onClose: () => void;
   onShare: () => void;
   onInvite: () => void;
-  onExportTldraw: () => void;
+  onExportExcalidraw: () => void;
   onImportExcalidraw: (file: File) => void;
   id?: string;
 }
@@ -15,7 +15,7 @@ const ShareMenu = ({
   onClose,
   onShare,
   onInvite,
-  onExportTldraw,
+  onExportExcalidraw,
   onImportExcalidraw,
   id,
 }: ShareMenuProps): JSX.Element => {
@@ -60,8 +60,8 @@ const ShareMenu = ({
           </button>
         </li>
         <li>
-          <button type="button" onClick={onExportTldraw} role="menuitem">
-            Export workspace (.tldraw)
+          <button type="button" onClick={onExportExcalidraw} role="menuitem">
+            Export workspace (.excalidraw)
           </button>
         </li>
         <li>

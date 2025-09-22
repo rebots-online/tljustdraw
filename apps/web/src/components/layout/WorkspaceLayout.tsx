@@ -26,7 +26,7 @@ interface WorkspaceLayoutProps {
   onSelectAgent: (agentId: string) => void;
   onShare: () => void;
   onInvite: () => void;
-  onExportTldraw: () => void;
+  onExportExcalidraw: () => void;
   onImportExcalidraw: (file: File) => void;
 }
 
@@ -41,7 +41,7 @@ const WorkspaceLayout = ({
   onSelectAgent,
   onShare,
   onInvite,
-  onExportTldraw,
+  onExportExcalidraw,
   onImportExcalidraw,
 }: WorkspaceLayoutProps): JSX.Element => {
   const settingsOpen = useWorkspaceLayoutStore((state) => state.settingsOpen);
@@ -63,8 +63,8 @@ const WorkspaceLayout = ({
 
   const handleExport = useCallback(() => {
     setShareMenuOpen(false);
-    onExportTldraw();
-  }, [onExportTldraw, setShareMenuOpen]);
+    onExportExcalidraw();
+  }, [onExportExcalidraw, setShareMenuOpen]);
 
   const handleImport = useCallback(
     (file: File) => {
@@ -110,7 +110,7 @@ const WorkspaceLayout = ({
             onClose={() => setShareMenuOpen(false)}
             onShare={handleShare}
             onInvite={handleInvite}
-            onExportTldraw={handleExport}
+            onExportExcalidraw={handleExport}
             onImportExcalidraw={handleImport}
           />
         </div>
