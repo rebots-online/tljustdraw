@@ -1,5 +1,5 @@
 import { Excalidraw } from '@excalidraw/excalidraw';
-import '@excalidraw/excalidraw/dist/excalidraw.css';
+import '@excalidraw/excalidraw/index.css';
 import { createLogger } from '@shared-utils';
 import { useCallback, useEffect, useRef } from 'react';
 
