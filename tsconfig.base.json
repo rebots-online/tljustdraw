@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "lib": ["DOM", "DOM.Iterable", "ES2021"],
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@core-ui/*": ["packages/core-ui/src/*"],
+      "@canvas-adapters/*": ["packages/canvas-adapters/src/*"],
+      "@agent-services/*": ["packages/agent-services/src/*"],
+      "@auth-billing/*": ["packages/auth-billing/src/*"],
+      "@shared-utils/*": ["packages/shared-utils/src/*"]
+    }
+  },
+  "include": []
+}

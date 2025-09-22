@@ -1,0 +1,6 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'server'
+  - 'tests'
+  - 'infra'

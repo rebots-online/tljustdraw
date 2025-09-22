@@ -1,0 +1,26 @@
+{
+  "name": "@tljustdraw/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b tsconfig.node.json && vite build",
+    "preview": "vite preview",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --max-warnings 0",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tldraw/tldraw": "^2.3.0",
+    "clsx": "^2.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.2.0"
+  }
+}

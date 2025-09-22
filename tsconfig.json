@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "packages/shared-utils" },
+    { "path": "packages/core-ui" },
+    { "path": "packages/canvas-adapters" },
+    { "path": "packages/agent-services" },
+    { "path": "packages/auth-billing" },
+    { "path": "apps/web" },
+    { "path": "apps/desktop" },
+    { "path": "server" },
+    { "path": "tests" }
+  ]
+}
