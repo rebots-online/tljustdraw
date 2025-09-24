@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
 
-import { useModelCatalog } from '../hooks/useModelCatalog';
+import { CatalogSource, useModelCatalog } from '../hooks/useModelCatalog';
 import { OpenRouterModel } from '../state/models';
 
 interface ModelContextValue {
@@ -9,6 +9,7 @@ interface ModelContextValue {
   setActiveModelId: (modelId: string) => void;
   loading: boolean;
   error?: string;
+  source: CatalogSource;
 }
 
 const ModelContext = createContext<ModelContextValue | undefined>(undefined);
@@ -22,6 +23,7 @@ export const ModelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setActiveModelId: catalog.setActiveModelId,
       loading: catalog.loading,
       error: catalog.error,
+      source: catalog.source,
     }),
     [
       catalog.models,
@@ -29,6 +31,7 @@ export const ModelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       catalog.setActiveModelId,
       catalog.loading,
       catalog.error,
+      catalog.source,
     ]
   );
 
