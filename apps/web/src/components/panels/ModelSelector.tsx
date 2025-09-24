@@ -8,7 +8,7 @@ interface ModelSelectorProps {
 }
 
 const ModelSelector = ({ label = 'Model', onChange }: ModelSelectorProps): JSX.Element => {
-  const { models, activeModelId, setActiveModelId, loading, error } = useModelContext();
+  const { models, activeModelId, setActiveModelId, loading, error, source } = useModelContext();
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const nextId = event.target.value;
@@ -20,11 +20,18 @@ const ModelSelector = ({ label = 'Model', onChange }: ModelSelectorProps): JSX.E
     if (loading) {
       return 'Loading OpenRouter models…';
     }
-    if (error) {
-      return `Using fallback catalog (${error})`;
+
+    if (source === 'remote') {
+      return `${models.length} models available via OpenRouter`;
     }
-    return `${models.length} models available`;
-  }, [error, loading, models.length]);
+
+    if (source === 'static') {
+      return `${models.length} models available from static catalog`;
+    }
+
+    const fallbackReason = error ? ` (${error})` : '';
+    return `Using bundled catalog${fallbackReason}`;
+  }, [error, loading, models.length, source]);
 
   return (
     <div className="model-selector">

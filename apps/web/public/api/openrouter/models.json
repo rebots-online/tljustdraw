@@ -1,0 +1,36 @@
+{
+  "data": [
+    {
+      "id": "openrouter/x-ai/grok-4-fast:free",
+      "name": "Grok 4 Fast (OpenRouter)",
+      "description": "Default Grok 4 Fast free-tier model via OpenRouter.",
+      "context_length": 262144,
+      "pricing": {
+        "prompt": 0,
+        "completion": 0,
+        "currency": "USD"
+      },
+      "top_provider": {
+        "name": "x.ai"
+      }
+    },
+    {
+      "id": "openrouter/openai/gpt-4o-mini",
+      "name": "GPT-4o Mini",
+      "description": "Balanced OpenAI GPT-4o mini via OpenRouter.",
+      "context_length": 128000,
+      "top_provider": {
+        "name": "OpenAI"
+      }
+    },
+    {
+      "id": "openrouter/google/gemini-flash-1.5",
+      "name": "Gemini Flash 1.5",
+      "description": "Fast multimodal Gemini Flash 1.5.",
+      "context_length": 1048576,
+      "top_provider": {
+        "name": "Google"
+      }
+    }
+  ]
+}
